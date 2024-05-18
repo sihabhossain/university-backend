@@ -1,12 +1,23 @@
 import { Request, Response } from 'express';
 import { StudentServices } from './student.service';
+import studentJoiSchema from './student.validation';
 
 //student controller
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student: studentData } = req.body;
 
+    const { error } = studentJoiSchema.validate(studentData);
+
     const result = await StudentServices.createStudentIntoDB(studentData);
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'something went wrong',
+        error,
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -14,7 +25,11 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong',
+      error: error,
+    });
   }
 };
 

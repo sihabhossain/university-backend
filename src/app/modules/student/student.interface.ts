@@ -25,6 +25,7 @@ export interface TLocalGuardian {
 
 export interface TStudent {
   id: string;
+  password: string;
   name: TUserName;
   gender: 'male' | 'female' | 'other';
   dateOfBirth?: string;
@@ -38,6 +39,7 @@ export interface TStudent {
   localGuardian: TLocalGuardian;
   profileImg?: string;
   isActive: 'active' | 'blocked';
+  isDeleted: boolean;
 }
 
 // creating static

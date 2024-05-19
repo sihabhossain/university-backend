@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { StudentServices } from './student.service';
 import studentValidationSchema from './student.validation';
 
-//student controller
+//create student
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student: studentData } = req.body;
@@ -26,6 +26,7 @@ const createStudent = async (req: Request, res: Response) => {
   }
 };
 
+// get all students
 const getAllStudents = async (req: Request, res: Response) => {
   try {
     const result = await StudentServices.getAllStudentsFromDB();
@@ -35,11 +36,16 @@ const getAllStudents = async (req: Request, res: Response) => {
       message: 'Student retrieved successfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
   }
 };
 
+// get single student
 const getSingleStudent = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -50,8 +56,32 @@ const getSingleStudent = async (req: Request, res: Response) => {
       message: 'single Student retrieved successfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
+  }
+};
+
+// delete student
+const deleteStudent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await StudentServices.deleteStudentFromDB(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Student is deleted successfully',
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -59,4 +89,5 @@ export const StudentControllers = {
   createStudent,
   getAllStudents,
   getSingleStudent,
+  deleteStudent,
 };
